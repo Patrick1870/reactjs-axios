@@ -1,23 +1,36 @@
-import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
+import {useState} from 'react';
 
 function App() {
+
+  const [joke, setJoke] = useState(null);
+  const [punchline, setPunchline] = useState(null);
+  const [showPunchline, setShowpunchline] = useState(false);
+
+  const getJoke = () => {
+    axios.get('https://official-joke-api.appspot.com/random_joke').then(res => {
+      setJoke(res.data.setup);
+      setPunchline(res.data.punchline);
+      setShowpunchline(false)
+    });
+  }
+
+  const switchVisibility = () => {
+    setShowpunchline(!showPunchline);
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      
+       Jokes: <br/>
+       <div>{joke}</div><br/>
+       {showPunchline ? <div>{punchline}</div> : <div></div>}
+       
+       <button onClick={getJoke}>Get joke</button>
+
+       <button onClick={switchVisibility}>Show punchline</button>
+
     </div>
   );
 }
